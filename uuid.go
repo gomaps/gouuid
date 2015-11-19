@@ -16,7 +16,7 @@ import (
 	"regexp"
 )
 
-// The UUID reserved variants. 
+// The UUID reserved variants.
 const (
 	ReservedNCS       byte = 0x80
 	ReservedRFC4122   byte = 0x40
@@ -44,6 +44,20 @@ var re = regexp.MustCompile(hexPattern)
 // A UUID representation compliant with specification in
 // RFC 4122 document.
 type UUID [16]byte
+
+// [Unm|M]arshalJSON satisifes the json.[Unm|M]arshaler interface
+// so that UUID values can be sent to/from JSON values as hex strings
+func (u UUID) MarshalJSON() ([]byte, error) {
+	return []byte(u.String()), nil
+}
+func (u *UUID) UnmarshalJSON(b []byte) error {
+	uParsed, err := ParseHex(string(b))
+	if err != nil {
+		return err
+	}
+	u = uParsed
+	return nil
+}
 
 // ParseHex creates a UUID object from given hex string
 // representation. Function accepts UUID string in following
