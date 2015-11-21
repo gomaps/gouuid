@@ -48,7 +48,7 @@ type UUID [16]byte
 // [Unm|M]arshalJSON satisifes the json.[Unm|M]arshaler interface
 // so that UUID values can be sent to/from JSON values as hex strings
 func (u UUID) MarshalJSON() ([]byte, error) {
-	return []byte(u.String()), nil
+	return []byte("\"" + u.String() + "\""), nil
 }
 func (u *UUID) UnmarshalJSON(b []byte) error {
 	uParsed, err := ParseHex(string(b))
